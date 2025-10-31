@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Khóa học</title>
+</head>
+<body>
+    <h1>THÊM KHÓA HỌC MỚI</h1>
+    <p><strong>SoMay:</strong> PC01 | <strong>Họ tên:</strong> NGUYEN VAN A | <strong>MSSV:</strong> 21012345</p>
+    <hr>
+
+    <!-- THÔNG BÁO LỖI -->
+    <div th:if="${error}">
+        <p style="color: red;" th:text="${error}"></p>
+    </div>
+
+    <!-- FORM THÊM KHÓA HỌC -->
+    <form th:action="@{/courses/save}" method="post" th:object="${course}">
+        
+        <table>
+            <tr>
+                <td><label for="courseCode">Mã khóa học *</label></td>
+                <td>
+                    <input type="text" 
+                           th:field="*{courseCode}"
+                           id="courseCode"
+                           maxlength="20"
+                           size="30"/>
+                    <br>
+                    <span th:if="${#fields.hasErrors('courseCode')}" 
+                          th:errors="*{courseCode}" 
+                          style="color: red; font-size: 12px;"></span>
+                    <span th:unless="${#fields.hasErrors('courseCode')}" 
+                          style="font-size: 12px; color: gray;">
+                        (Chỉ gồm chữ IN HOA và số, tối đa 20 ký tự)
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="courseName">Tên khóa học *</label></td>
+                <td>
+                    <input type="text" 
+                           th:field="*{courseName}"
+                           id="courseName"
+                           maxlength="100"
+                           size="30"/>
+                    <br>
+                    <span th:if="${#fields.hasErrors('courseName')}" 
+                          th:errors="*{courseName}" 
+                          style="color: red; font-size: 12px;"></span>
+                    <span th:unless="${#fields.hasErrors('courseName')}" 
+                          style="font-size: 12px; color: gray;">
+                        (Tối đa 100 ký tự)
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="credit">Số tín chỉ *</label></td>
+                <td>
+                    <input type="number" 
+                           th:field="*{credit}"
+                           id="credit"
+                           min="1"
+                           max="10"
+                           size="10"/>
+                    <br>
+                    <span th:if="${#fields.hasErrors('credit')}" 
+                          th:errors="*{credit}" 
+                          style="color: red; font-size: 12px;"></span>
+                    <span th:unless="${#fields.hasErrors('credit')}" 
+                          style="font-size: 12px; color: gray;">
+                        (Từ 1 đến 10)
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <br>
+                    <button type="submit">Lưu khóa học</button>
+                    <a th:href="@{/courses}"><button type="button">Hủy</button></a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

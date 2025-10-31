@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Khóa học</title>
+</head>
+<body>
+    <h1>THỐNG KÊ GIẢNG VIÊN THEO KHÓA HỌC</h1>
+    <p><strong>SoMay:</strong> PC01 | <strong>Họ tên:</strong> NGUYEN VAN A | <strong>MSSV:</strong> 21012345</p>
+    <hr>
+
+    <!-- THÔNG BÁO -->
+    <div th:if="${successMessage}">
+        <p style="color: green;" th:text="${successMessage}"></p>
+    </div>
+
+    <div th:if="${errorMessage}">
+        <p style="color: red;" th:text="${errorMessage}"></p>
+    </div>
+
+    <div th:if="${error}">
+        <p style="color: red;" th:text="${error}"></p>
+    </div>
+
+    <p><a th:href="@{/courses/add}">Thêm mới Khóa học</a></p>
+
+    <h2>Danh sách Khóa học</h2>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã Khóa học</th>
+                <th>Tên Khóa học</th>
+                <th>Số tín chỉ</th>
+                <th>Số lượng GV</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="course, iterStat : ${courses}">
+                <td th:text="${iterStat.count}">1</td>
+                <td th:text="${course.courseCode}">CS101</td>
+                <td th:text="${course.courseName}">Tên khóa học</td>
+                <td th:text="${course.credit}">3</td>
+                <td th:text="${countMap[course.id]}">0</td>
+                <td>
+                    <a th:href="@{/courses/lecturers/{id}(id=${course.id})}">Xem GV</a> |
+                    <a th:href="@{/courses/delete/{id}(id=${course.id})}" 
+                       onclick="return confirm('Bạn có chắc muốn xóa khóa học này?')">Xóa</a>
+                </td>
+            </tr>
+            <tr th:if="${courses == null or courses.isEmpty()}">
+                <td colspan="6">Chưa có khóa học nào.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

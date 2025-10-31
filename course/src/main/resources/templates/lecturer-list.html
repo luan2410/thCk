@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Giảng viên</title>
+</head>
+<body>
+    <h1>DANH SÁCH GIẢNG VIÊN</h1>
+    <p><strong>SoMay:</strong> PC01 | <strong>Họ tên:</strong> NGUYEN VAN A | <strong>MSSV:</strong> 21012345</p>
+    <hr>
+
+    <!-- THÔNG TIN KHÓA HỌC -->
+    <div th:if="${course != null}">
+        <p>
+            <strong>Khóa học:</strong> <span th:text="${course.courseName}">Tên khóa học</span><br>
+            <strong>Mã:</strong> <span th:text="${course.courseCode}">CS101</span> | 
+            <strong>Tín chỉ:</strong> <span th:text="${course.credit}">3</span> | 
+            <strong>Số giảng viên:</strong> <span th:text="${lecturers != null ? lecturers.size() : 0}">0</span>
+        </p>
+    </div>
+
+    <p><a th:href="@{/courses}">Quay lại Danh sách Khóa học</a></p>
+
+    <h2>Danh sách Giảng viên</h2>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã Giảng viên</th>
+                <th>Tên Giảng viên</th>
+                <th>Email</th>
+                <th>Khoa/Bộ môn</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="lecturer, iterStat : ${lecturers}">
+                <td th:text="${iterStat.count}">1</td>
+                <td th:text="${lecturer.lecturerCode}">LEC001</td>
+                <td th:text="${lecturer.lecturerName}">Tên giảng viên</td>
+                <td th:text="${lecturer.email != null ? lecturer.email : '-'}">email@example.com</td>
+                <td th:text="${lecturer.department != null ? lecturer.department : '-'}">Khoa CNTT</td>
+            </tr>
+            <tr th:if="${lecturers == null or lecturers.isEmpty()}">
+                <td colspan="5">Khóa học này chưa có giảng viên nào.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -3,10 +3,13 @@ package iuh.fit.se.controllers;
 import iuh.fit.se.entities.Course;
 import iuh.fit.se.services.CourseService;
 import iuh.fit.se.services.LecturerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,31 +54,37 @@ public class CourseController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("course") Course course, Model model) {
+    public String save(@Valid @ModelAttribute("course") Course course, 
+                      BindingResult result, 
+                      Model model,
+                      RedirectAttributes redirectAttributes) {
+        // Kiểm tra validation errors
+        if (result.hasErrors()) {
+            return "course-add";
+        }
+        
         try {
             courseService.save(course);
+            redirectAttributes.addFlashAttribute("successMessage", "Thêm khóa học thành công!");
             return "redirect:/courses";
         } catch (IllegalArgumentException ex) {
             model.addAttribute("error", ex.getMessage());
-            model.addAttribute("course", course);
             return "course-add";
         } catch (Exception ex) {
             model.addAttribute("error", "Đã xảy ra lỗi không xác định!");
-            model.addAttribute("course", course);
             return "course-add";
         }
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id, Model model) {
+    public String delete(@PathVariable int id, RedirectAttributes redirectAttributes) {
         Course c = courseService.findById(id);
         if (c != null && c.getLecturers() != null && !c.getLecturers().isEmpty()) {
-            model.addAttribute("error", "Không thể xóa! Khóa học đã có giảng viên.");
-            model.addAttribute("courses", courseService.findAll());
-            return "course-list";
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa! Khóa học đã có giảng viên.");
+        } else {
+            courseService.delete(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Xóa khóa học thành công!");
         }
-
-        courseService.delete(id);
         return "redirect:/courses";
     }
 }
